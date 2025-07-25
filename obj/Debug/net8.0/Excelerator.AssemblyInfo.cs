@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Excelerator")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a37e58652652bc5015a49efa472fe04e4b9ff557")]
 [assembly: System.Reflection.AssemblyProductAttribute("Excelerator")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Excelerator")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
