@@ -1,22 +1,16 @@
+# FileTracker
 
-## 🧩 Tech Stack
+**FileTracker** is a lightweight C# console application designed to merge two CSV files and generate a unified output. It features error handling, retry mechanisms, and customizable output location management.
 
-- C# (.NET 8.0)
-- Console Application
-- File I/O
-- Exception Handling
+## 🚀 Features
 
-## ⚠️ Notes
+- Accepts two CSV file paths as input.
+- Validates file existence before processing.
+- Merges content with consistent headers.
+- Saves output to a new subfolder called `Merge_updated_file`.
+- Gracefully handles exceptions with color-coded error messages.
+- Offers retry capability when inputs are invalid.
 
-- Do not include header rows in both CSV files if merging raw data.
-- Ensure CSVs are properly formatted and consistent.
+## 📁 Output
 
-## 📦 Future Improvements
-
-- GUI interface using Windows Forms or WPF.
-- Column-wise merge validation.
-- Duplicate row handling.
-
-## 📄 License
-
-MIT – feel free to use, modify, and share.
+The merged CSV file is saved in a subdirectory:
