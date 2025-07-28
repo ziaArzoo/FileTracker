@@ -1,12 +1,40 @@
+using System;
+using System.IO;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Windows.Forms;
+using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
-using System.Text.RegularExpressions;
-using DocumentFormat.OpenXml;
 
 class ExcelUpdater
 {
+    static string PickFile(string title)
+    {
+        using (var dialog = new OpenFileDialog())
+        {
+            dialog.Title = title;
+            dialog.Filter = "Excel Files|*.xlsx;*.xls";
+            dialog.Multiselect = false;
+
+            DialogResult result = dialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                return dialog.FileName;
+            }
+            else
+            {
+                throw new Exception("File selection cancelled.");
+            }
+        }
+    }
+    [STAThread]
     static void Main(string[] args)
     {
+        string inputFile1 = null;
+        string inputFile2 = null;
         Console.ForegroundColor = ConsoleColor.Cyan;
         Console.WriteLine("\n=========================================");
         Console.WriteLine("             Excel Merge Tool v1.0         ");
@@ -14,80 +42,86 @@ class ExcelUpdater
         Console.ResetColor();
 
         Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.WriteLine(" Enter the full path of the first Excel file:");
-        string inputFile1 = Console.ReadLine();
-
-        Console.WriteLine(" Enter the full path of the second Excel file:");
-        string inputFile2 = Console.ReadLine();
-    try
+        Console.WriteLine("Press 1 to Import files");
+        string input = Console.ReadLine();
+        if (input == "1")
         {
-        // Validate both inputs
-            if (!File.Exists(inputFile1) || !File.Exists(inputFile2))
+            inputFile1 = PickFile("Select the first Excel file");
+            inputFile2 = PickFile("Select the second Excel file");
+        }
+        else
+        {
+            Console.WriteLine("Invalid Data");
+        }
+        try
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("One or both input files are invalid. Please check the paths.");
-                Console.ResetColor();
-            }
-
-            // Output folder next to the first input
-            string baseDir = Path.GetDirectoryName(inputFile1);
-            string outputDir = Path.Combine(baseDir, "Merge_updated_file");
-            Directory.CreateDirectory(outputDir);
-
-        // Output file name
-            string outputFileName = "Combined" + ".xlsx";
-            string outputPath = Path.Combine(outputDir, outputFileName);
-            string keyColumn = "Id";
-
-        
-            var file1Data = ReadExcelToDict(inputFile1, keyColumn, out var headers);
-            var file2Data = ReadExcelToDict(inputFile2, keyColumn, out _);
-            
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Console.Write("\n Merging data");
-            for (int i = 0; i < 5; i++) { Thread.Sleep(200); Console.Write("."); }
-            Console.ResetColor();
-
-            foreach (var kvp in file2Data)
-            {
-                string id = kvp.Key;
-                var newRow = kvp.Value;
-
-                if (file1Data.ContainsKey(id))
+                // Validate both inputs
+                if (!File.Exists(inputFile1) || !File.Exists(inputFile2))
                 {
-                    var oldRow = file1Data[id];
-                    foreach (var col in newRow.Keys)
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("One or both input files are invalid. Please check the paths.");
+                    Console.ResetColor();
+                }
+
+                // Output folder next to the first input
+                string baseDir = Path.GetDirectoryName(inputFile1);
+                string outputDir = Path.Combine(baseDir, "Merge_updated_file");
+                Directory.CreateDirectory(outputDir);
+
+                // Output file name
+                string outputFileName = "Combined" + ".xlsx";
+                string outputPath = Path.Combine(outputDir, outputFileName);
+                string keyColumn = "Id";
+
+
+                var file1Data = ReadExcelToDict(inputFile1, keyColumn, out var headers);
+                var file2Data = ReadExcelToDict(inputFile2, keyColumn, out _);
+
+                Console.ForegroundColor = ConsoleColor.Blue;
+                Console.Write("\n Merging data");
+                for (int i = 0; i < 5; i++) { Thread.Sleep(200); Console.Write("."); }
+                Console.ResetColor();
+
+                foreach (var kvp in file2Data)
+                {
+                    string id = kvp.Key;
+                    var newRow = kvp.Value;
+
+                    if (file1Data.ContainsKey(id))
                     {
-                        if (oldRow.ContainsKey(col) && oldRow[col] != newRow[col])
-                            oldRow[col] = newRow[col];
+                        var oldRow = file1Data[id];
+                        foreach (var col in newRow.Keys)
+                        {
+                            if (oldRow.ContainsKey(col) && oldRow[col] != newRow[col])
+                                oldRow[col] = newRow[col];
+                        }
+                    }
+                    else
+                    {
+                        file1Data[id] = newRow;
                     }
                 }
-                else
-                {
-                    file1Data[id] = newRow;
-                }
+
+                WriteExcelFromDict(outputPath, headers, file1Data);
+
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"\n Success! Merged file saved to:\n{outputPath}");
+                Console.ResetColor();
+            }
+            catch (Exception ex)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"\n Error: {ex.Message}");
+                Console.ResetColor();
+            }
+            finally
+            {
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.WriteLine("\nPress any key to exit...");
+                Console.ResetColor();
+                Console.ReadKey();
             }
 
-            WriteExcelFromDict(outputPath, headers, file1Data);
-
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"\n Success! Merged file saved to:\n{outputPath}");
-            Console.ResetColor();
-        }
-        catch (Exception ex)
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine($"\n Error: {ex.Message}");
-            Console.ResetColor();
-        }
-        finally
-        {
-            Console.ForegroundColor = ConsoleColor.DarkGray;
-            Console.WriteLine("\nPress any key to exit...");
-            Console.ResetColor();
-            Console.ReadKey();
-        }
-        
     }
 
 
