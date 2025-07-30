@@ -33,6 +33,7 @@ class ExcelUpdater
     [STAThread]
     static void Main(string[] args)
     {
+        //making the UI
         string inputFile1 = null;
         string inputFile2 = null;
         Console.ForegroundColor = ConsoleColor.Cyan;
@@ -42,16 +43,17 @@ class ExcelUpdater
         Console.ResetColor();
 
         Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.WriteLine("Press 1 to Import files");
+        Console.WriteLine("Do you want to import files(Yes/No)");
         string input = Console.ReadLine();
-        if (input == "1")
+        //Prompting User for a value
+        if (input.ToLower() == "yes")
         {
-            inputFile1 = PickFile("Select the first Excel file");
+            inputFile1 = PickFile("Select the first Excel file where");
             inputFile2 = PickFile("Select the second Excel file");
         }
         else
         {
-            Console.WriteLine("Invalid Data");
+            Console.WriteLine("Thank see you later!!");
         }
         try
             {
