@@ -8,10 +8,12 @@ using System.Windows.Forms;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
+using System.Threading.Tasks;
+
 
 class ExcelUpdater
 {
-    static string PickFile(string title)
+    static async Task<string> PickFileAsync(string title)
     {
         using (var dialog = new OpenFileDialog())
         {
@@ -31,7 +33,7 @@ class ExcelUpdater
         }
     }
     [STAThread]
-    static void Main(string[] args)
+    static async Task Main(string[] args)
     {
         //making the UI
         string inputFile1 = null;
@@ -43,19 +45,31 @@ class ExcelUpdater
         Console.ResetColor();
 
         Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.WriteLine("Do you want to import files(Yes/No)");
+        Console.Write("Let me think");
+        int j = 0;
+        while (j < 5)
+        {
+           Console.Write(".");
+           await Task.Delay(500);  // waits 1 second before printing next dot
+            j++;
+        }
+        Console.WriteLine("\nDo you want Me to import files(Yes/No)");
         string input = Console.ReadLine();
         //Prompting User for a value
         if (input.ToLower() == "yes")
         {
-            inputFile1 = PickFile("Select the first Excel file where");
-            inputFile2 = PickFile("Select the second Excel file");
-        }
-        else
-        {
-            Console.WriteLine("Thank see you later!!");
-        }
-        try
+            inputFile1 = await PickFileAsync("Select the first Excel file where");
+            inputFile2 = await PickFileAsync("Select the second Excel file");
+            Console.Write("reading files");
+            int k = 0;
+            while (k < 7)
+            {
+            Console.Write(".");
+            await Task.Delay(500);  // waits 1 second before printing next dot
+                j++;
+            }
+            Console.Write("files Read");
+            try
             {
                 // Validate both inputs
                 if (!File.Exists(inputFile1) || !File.Exists(inputFile2))
@@ -124,9 +138,12 @@ class ExcelUpdater
                 Console.ReadKey();
             }
 
+        }
+        else
+        {
+            Console.WriteLine("Thank see you later!!");
+        }
     }
-
-
     // ↓↓↓ Other methods stay unchanged ↓↓↓
 
     static Dictionary<string, Dictionary<string, string>> ReadExcelToDict(string path, string keyColumn, out List<string> headers)
