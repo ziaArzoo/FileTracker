@@ -13,37 +13,33 @@ using System.Threading.Tasks;
 
 class ExcelUpdater
 {
-    static async Task<string> PickFileAsync(string title, int num)
+    static string PickFile(string title, int num)
     {
         using (var dialog = new OpenFileDialog())
         {
             dialog.Title = title;
             dialog.Filter = "Excel Files|*.xlsx;*.xls";
             dialog.Multiselect = false;
-
             DialogResult result = dialog.ShowDialog();
             if (result == DialogResult.OK)
             {
-                Console.Write("reading files{num}");
-                int k = 0;
-                while (k < 5)
+                Console.Write($"reading files{num}");
+                for (int k = 0; k < 5; k++)
                 {
                     Console.Write(".");
-                    await Task.Delay(500);  // waits 1 second before printing next dot
-                    k++;
+                    Thread.Sleep(500);  // it's fine here
                 }
-                Console.Write("\nfiles{num} Read\n");
+                Console.Write($"\nfiles{num} Read\n");
                 return dialog.FileName;
             }
             else
             {
                 throw new Exception("File selection cancelled.");
             }
-            
         }
     }
     [STAThread]
-    static async Task Main(string[] args)
+    static void Main(string[] args)
     {
         //making the UI
         string inputFile1 = null;
@@ -55,12 +51,12 @@ class ExcelUpdater
         Console.ResetColor();
 
         Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.Write("Let me think");
+        Console.Write("Hi");
         int j = 0;
-        while (j < 5)
+        while (j < 3)
         {
-           Console.Write(".");
-           await Task.Delay(500);  // waits 1 second before printing next dot
+           Console.Write("!");
+            Thread.Sleep(300);  // waits 300ms second before printing next dot
             j++;
         }
         Console.WriteLine("\nDo you want Me to import files(Yes/No)");
@@ -68,8 +64,8 @@ class ExcelUpdater
         //Prompting User for a value
         if (input.ToLower() == "yes")
         {
-            inputFile1 = await PickFileAsync("Select the first Excel file where", 1);
-            inputFile2 = await PickFileAsync("Select the second Excel file", 2);
+            inputFile1 = PickFile("Select the first Excel file where", 1);
+            inputFile2 = PickFile("Select the first Excel file where", 2);
             try
             {
                 // Validate both inputs
@@ -143,6 +139,10 @@ class ExcelUpdater
         else
         {
             Console.WriteLine("Thank see you later!!");
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+            Console.WriteLine("\nPress any key to exit...");
+            Console.ResetColor();
+            Console.ReadKey();
         }
     }
     // ↓↓↓ Other methods stay unchanged ↓↓↓
