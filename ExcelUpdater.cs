@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 class ExcelUpdater
 {
-    static async Task<string> PickFileAsync(string title)
+    static async Task<string> PickFileAsync(string title, int num)
     {
         using (var dialog = new OpenFileDialog())
         {
@@ -24,12 +24,22 @@ class ExcelUpdater
             DialogResult result = dialog.ShowDialog();
             if (result == DialogResult.OK)
             {
+                Console.Write("reading files{num}");
+                int k = 0;
+                while (k < 5)
+                {
+                    Console.Write(".");
+                    await Task.Delay(500);  // waits 1 second before printing next dot
+                    k++;
+                }
+                Console.Write("\nfiles{num} Read\n");
                 return dialog.FileName;
             }
             else
             {
                 throw new Exception("File selection cancelled.");
             }
+            
         }
     }
     [STAThread]
@@ -58,17 +68,8 @@ class ExcelUpdater
         //Prompting User for a value
         if (input.ToLower() == "yes")
         {
-            inputFile1 = await PickFileAsync("Select the first Excel file where");
-            inputFile2 = await PickFileAsync("Select the second Excel file");
-            Console.Write("reading files");
-            int k = 0;
-            while (k < 7)
-            {
-            Console.Write(".");
-            await Task.Delay(500);  // waits 1 second before printing next dot
-                j++;
-            }
-            Console.Write("files Read");
+            inputFile1 = await PickFileAsync("Select the first Excel file where", 1);
+            inputFile2 = await PickFileAsync("Select the second Excel file", 2);
             try
             {
                 // Validate both inputs
