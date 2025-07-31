@@ -23,13 +23,13 @@ class ExcelUpdater
             DialogResult result = dialog.ShowDialog();
             if (result == DialogResult.OK)
             {
-                Console.Write($"reading files{num}");
+                Console.Write($"reading file {num}");
                 for (int k = 0; k < 5; k++)
                 {
                     Console.Write(".");
                     Thread.Sleep(500);  // it's fine here
                 }
-                Console.Write($"\nfiles{num} Read\n");
+                Console.Write($"\nfile {num} Read\n");
                 return dialog.FileName;
             }
             else
@@ -44,26 +44,28 @@ class ExcelUpdater
         //making the UI
         string inputFile1 = null;
         string inputFile2 = null;
+        string input      = null;
         Console.ForegroundColor = ConsoleColor.Cyan;
         Console.WriteLine("\n=========================================");
         Console.WriteLine("             Excel Merge Tool v1.0         ");
         Console.WriteLine("=========================================\n");
         Console.ResetColor();
-
         Console.ForegroundColor = ConsoleColor.Yellow;
+
         Console.Write("Hi");
-        int j = 0;
-        while (j < 3)
+        for (int k = 0; k < 3; k++)
         {
-           Console.Write("!");
-            Thread.Sleep(300);  // waits 300ms second before printing next dot
-            j++;
+            Console.Write(".");
+            Thread.Sleep(200);  // it's fine here
         }
-        Console.WriteLine("\nDo you want Me to import files(Yes/No)");
-        string input = Console.ReadLine();
-        //Prompting User for a value
-        if (input.ToLower() == "yes")
+        do
         {
+            Console.WriteLine("\nDo you want Me to import files(Yes/No)");
+            input = Console.ReadLine();
+        }
+        while (input.ToLower() != "yes" || input.ToLower() != "y");
+
+            //Prompting User for a value    
             inputFile1 = PickFile("Select the first Excel file where", 1);
             inputFile2 = PickFile("Select the first Excel file where", 2);
             try
@@ -134,16 +136,7 @@ class ExcelUpdater
                 Console.ResetColor();
                 Console.ReadKey();
             }
-
-        }
-        else
-        {
-            Console.WriteLine("Thank see you later!!");
-            Console.ForegroundColor = ConsoleColor.DarkGray;
-            Console.WriteLine("\nPress any key to exit...");
-            Console.ResetColor();
-            Console.ReadKey();
-        }
+        
     }
     // ↓↓↓ Other methods stay unchanged ↓↓↓
 
