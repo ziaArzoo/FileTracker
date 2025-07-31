@@ -63,7 +63,7 @@ class ExcelUpdater
             Console.WriteLine("\nDo you want Me to import files(Yes/No)");
             input = Console.ReadLine();
         }
-        while (input.ToLower() != "yes" || input.ToLower() != "y");
+        while (input.ToLower() != "yes");
 
             //Prompting User for a value    
             inputFile1 = PickFile("Select the first Excel file where", 1);
