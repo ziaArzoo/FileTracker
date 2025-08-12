@@ -1,6 +1,6 @@
-# FileTracker
+# Excelerator
 
-**FileTracker** is a lightweight C# console application designed to merge two CSV files and generate a unified output. It features error handling, retry mechanisms, and customizable output location management.
+**Excelerator** is a lightweight C# console application designed to merge two CSV files and generate a unified output. It features error handling, retry mechanisms, and customizable output location management.
 
 ## 🚀 Features
 
